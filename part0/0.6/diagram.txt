@@ -1,0 +1,58 @@
+browser->server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML-code
+browser->server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser: spa.js
+
+note over browser:
+browser starts executing all js-code,
+including code that requests JSON data from server 
+end note
+
+browser->server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+browser executes the event handler
+that parses the JSON response and
+calls the "redrawNotes()" function
+to display the notes
+end note
+
+# redrawNotes function is responsible
+# for creating the list of notes as an unordered list
+# based on the notes obtained from the server
+
+note over browser:
+the user creates a new note
+by typing into the text field
+and clicking the submit button
+end note
+
+# the default behavior of the form submission
+# is already overridden or prevented
+# by using the method "e.preventDefault()"
+# that is available on the "onsubmit" event
+# that's registered on the form element.
+# 
+# the event handler then creates a new note
+# and adds it to the "notes" array,
+# and also calls the "redrawNotes()" function
+# to display the notes.
+# 
+# after that, the event handler will also call "sendToServer()" function
+# with the new note as an argument.
+
+# sendToServer function is responsible
+# for sending a note to the server using the POST request.
+
+browser->server: POST /exampleapp/new_note_spa
+browser->server: {"content":"Hello","date":"2022-07-01"}
+
+note over server:
+the server process the request
+end note
+
+server-->browser: 201
+server-->browser: {"message":"note created"}
